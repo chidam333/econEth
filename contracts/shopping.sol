@@ -4,20 +4,20 @@ pragma solidity ^0.8.9;
 
 import "hardhat/console.sol";
 
-contract SastraShop {
-	uint256 totalProducts;
-    constructor() {
-        console.log("Sastra shop has been setup");
-    }
-	function register() public{
-		totalProducts+=1;
-		console.log(msg.sender,"has listed has product");
-	}
-	function getTotalProducts() public view returns(uint256){
-		console.log(totalProducts," - total products");
-		return totalProducts;
-	}
-}
+// contract SastraShop {
+// 	uint256 totalProducts;
+//     constructor() {
+//         console.log("Sastra shop has been setup");
+//     }
+// 	function register() public{
+// 		totalProducts+=1;
+// 		console.log(msg.sender,"has listed has product");
+// 	}
+// 	function getTotalProducts() public view returns(uint256){
+// 		console.log(totalProducts," - total products");
+// 		return totalProducts;
+// 	}
+// }
 contract SastraShop {
     constructor() payable {
         console.log("Initialized !");
