@@ -4,21 +4,24 @@ pragma solidity ^0.8.9;
 
 import "hardhat/console.sol";
 
-// contract SastraShop {
-// 	uint256 totalProducts;
-//     constructor() {
-//         console.log("Sastra shop has been setup");
-//     }
-// 	function register() public{
-// 		totalProducts+=1;
-// 		console.log(msg.sender,"has listed has product");
-// 	}
-// 	function getTotalProducts() public view returns(uint256){
-// 		console.log(totalProducts," - total products");
-// 		return totalProducts;
-// 	}
-// }
 contract SastraShop {
+	uint256 totalProducts;
+    constructor() {
+        console.log("Sastra shop has been setup");
+    }
+	function register() public{
+		totalProducts+=1;
+		console.log(msg.sender,"has listed has product");
+	}
+	function getTotalProducts() public view returns(uint256){
+		console.log(totalProducts," - total products");
+		return totalProducts;
+	}
+}
+contract SastraShop {
+    constructor() payable {
+        console.log("Initialized !");
+    }
     struct Product{
         // generally structure variables should not be public...
         uint  productID;
@@ -30,7 +33,6 @@ contract SastraShop {
         string desc;
         bool deleivered;
     }
-
     
     Product[] public products;
     event registered(address seller, uint rate, string name, uint productID);
@@ -43,7 +45,7 @@ contract SastraShop {
         Product memory tempProduct;
         tempProduct.productID = counter;
         tempProduct.seller = payable(msg.sender);
-        tempProduct.rate = _rate*10**18;
+        tempProduct.rate = _rate*1;
         tempProduct.desc = _desc;
         tempProduct.name = _name;
         counter++;
@@ -53,10 +55,9 @@ contract SastraShop {
     }
 // this buy function is used to intialize buyer
     function buy(uint _productID) payable public{
+        console.log("msgval",msg.value);
         require(products[_productID-1].rate == msg.value, "Enter the actual price");
-        // require(products[_productID-1].rate == msg.value, msg.value);
-
-        require(products[_productID-1].seller != msg.sender,"Seller cant buy");
+        // require(products[_productID-1].seller != msg.sender,"Seller cant buy");
         products[_productID-1].buyer = msg.sender;
         emit bought( _productID , msg.sender);
         
@@ -67,10 +68,17 @@ contract SastraShop {
         require(products[_productID-1].buyer == msg.sender, "only buyers can access");
         products[_productID-1].deleivered = true;
         products[_productID-1].seller.transfer(products[_productID-1].rate);
-
         emit deleivery(_productID);
     }
-
-
+    function totalProduct() public view returns (uint256){
+        return products.length;
+    }
+    function listProducts() public view returns(Product[] memory){
+        return products;
+    }
+    function quotePrice(uint _productID) public view returns(uint256){
+        uint256 cost = products[_productID-1].rate;
+        return cost;
+    }
    
 }

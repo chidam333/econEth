@@ -4,7 +4,7 @@
     import abi from "./utils/SastraShop.json";
     export let userid:string;
     export let contractAddress:string;
-    let totalProducts ;
+    let totalProduct = 0;
     onMount(()=>{
         const contractABI = abi.abi;
         getTotalProducts(contractABI);
@@ -15,9 +15,14 @@
                 const provider = new ethers.BrowserProvider(window.ethereum)
                 const signer = await provider.getSigner();
                 const shoppingContract = new ethers.Contract(contractAddress, contractABI, signer)
-                let mw = await shoppingContract.getTotalProducts()
-                let totalProducts = Number(mw)
-                console.log({totalProducts})
+                console.log(shoppingContract)
+                $: totalProduct=0;
+                const everything = await shoppingContract.listProducts();
+                for(const item of everything){
+                    if(!item[6]){
+                        totalProduct+=1
+                    }
+                }
             }
     }
 </script>
@@ -27,7 +32,7 @@
             <div class="heading text-amber-300 font-bold m-auto pl-4">Sastra shopping</div>
         </div>
         <div class="total-products text-gray-500 absolute top-24 right-16">
-            total-products : {totalProducts}
+            total-products : {totalProduct}
         </div>
     </nav>
 </main>
